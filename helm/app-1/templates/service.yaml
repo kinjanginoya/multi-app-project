@@ -1,0 +1,11 @@
+# helm/app-1/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "app-1.fullname" . }}
+spec:
+  ports:
+    - port: 8081
+      targetPort: 8081
+  selector:
+    app: {{ include "app-1.name" . }}
