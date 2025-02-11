@@ -1,0 +1,22 @@
+# helm/app-2/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "app-2.fullname" . }}
+  labels:
+    app: {{ include "app-2.name" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "app-2.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "app-2.name" . }}
+    spec:
+      containers:
+        - name: app-2
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: 8082
