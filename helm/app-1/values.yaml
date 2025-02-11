@@ -1,0 +1,7 @@
+image:
+  repository: demo/app-1
+  tag: latest
+
+service:
+  type: ClusterIP
+  port: 8080
