@@ -4,12 +4,19 @@ services:
     build: ./app-1
     ports:
       - "8081:8081"
+    volumes:
+      #- ./app-1/config:/config
+      - ./config:/config
     environment:
-      - SPRING_PROFILES_ACTIVE=default
-
+        #- SPRING_CONFIG_LOCATION=file:/config/application.properties
+      - SPRING_CONFIG_LOCATION=file:/config/app-1-config.properties
   app-2:
     build: ./app-2
     ports:
       - "8082:8082"
+    volumes:
+      #- ./app-2/config:/config
+      - ./config:/config
     environment:
-      - SPRING_PROFILES_ACTIVE=default
+        #- SPRING_CONFIG_LOCATION=file:/config/application.properties
+      - SPRING_CONFIG_LOCATION=file:/config/app-2-config.properties

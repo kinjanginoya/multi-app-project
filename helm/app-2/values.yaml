@@ -1,8 +1,0 @@
-# helm/app-2/values.yaml
-image:
-  repository: <dockerhub-username>/app-2
-  tag: latest
-  pullPolicy: Always
-
-service:
-  port: 8082

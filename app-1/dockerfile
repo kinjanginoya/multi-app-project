@@ -1,5 +1,6 @@
 FROM openjdk:17-jdk-slim
 WORKDIR /app
+VOLUME /config
 COPY target/app-1-0.0.1-SNAPSHOT.jar app-1.jar
 EXPOSE 8081
 CMD ["java", "-jar", "app-1.jar"]

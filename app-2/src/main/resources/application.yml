@@ -1,6 +1,0 @@
-spring:
-  application:
-    name : app2
-server:
-  address: 0.0.0.0
-  port: 8082  # Or whatever port you're using
