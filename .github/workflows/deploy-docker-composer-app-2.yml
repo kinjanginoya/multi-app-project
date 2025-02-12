@@ -1,0 +1,62 @@
+name: Deploy app-2 to GKE
+
+on:
+  push:
+    branches:
+      - main  # Or specify a branch for triggering
+
+jobs:
+  build-and-deploy-app-2:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up GCP credentials for authentication
+      - name: Set up GCP credentials
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      # Set up Docker to push images to Google Container Registry (GCR)
+      - name: Configure Docker to use GCP
+        run: |
+          gcloud auth configure-docker gcr.io
+
+      # Install Docker Compose
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+
+      # Build Docker images using Docker Compose
+      - name: Build Docker images with Docker Compose
+        run: |
+          docker-compose -f docker-compose.yml build app-2
+
+      # Push Docker image to GCR
+      - name: Push Docker image to GCR
+        run: |
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/app-2:${{ github.sha }}
+
+      # Set up kubectl for interacting with GKE
+      - name: Set up kubectl
+        uses: google-github-actions/setup-kubectl@v0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          cluster_name: ${{ secrets.GKE_CLUSTER_NAME }}
+          location: ${{ secrets.GKE_CLUSTER_ZONE }}
+
+      # Deploy app-2 to GKE
+      - name: Deploy app-2 to GKE
+        run: |
+          kubectl apply -f k8s/app-2-deployment.yaml
+          kubectl apply -f k8s/app-2-service.yaml
+
+      # Verify the deployment
+      - name: Verify app-2 deployment
+        run: |
+          kubectl get pods
+          kubectl get svc
